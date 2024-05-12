@@ -38,11 +38,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq unzip
 
-          # Add temporary file cleanup after Install Utilities (if applicable)
-      - name: Clean Up Temporary Files (if needed for Install Utilities)
-        run: |
-          /bin/rm -rf /tmp/*
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
