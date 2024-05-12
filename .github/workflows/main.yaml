@@ -37,7 +37,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y jq unzip
-          
+
           # Add temporary file cleanup after Install Utilities (if applicable)
       - name: Clean Up Temporary Files (if needed for Install Utilities)
         run: |
@@ -68,13 +68,15 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           # Add cache management after building the image (if applicable)
-        - uses: actions/cache@v3
-          with:
-            path: ~/.npm && node_modules  # Adjust paths based on your project
-            key: ${{ runner.os }}-build-${{ hashFiles('**/package*.json') }}  # Unique cache key
-            restore-keys: |
-              ${{ runner.os }}-build-  # Restore from previous builds with similar setup
-            purge: true  # This clears cache before each build
+      
+      - name: Cache Management 
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm && node_modules  # Adjust paths based on your project
+          key: ${{ runner.os }}-build-${{ hashFiles('**/package*.json') }}  # Unique cache key
+          restore-keys: |
+            ${{ runner.os }}-build-  # Restore from previous builds with similar setup
+          purge: true  # This clears cache before each build
 
           
   Continuous-Deployment:
