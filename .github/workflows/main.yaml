@@ -41,7 +41,7 @@ jobs:
           # Add temporary file cleanup after Install Utilities (if applicable)
       - name: Clean Up Temporary Files (if needed for Install Utilities)
         run: |
-          sh rm -rf /tmp/*
+          /bin/rm -rf /tmp/*
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
