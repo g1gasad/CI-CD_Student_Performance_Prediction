@@ -25,8 +25,8 @@ jobs:
       - name: Run unit tests
         run: echo "Running unit tests"
 
-  build-docker-image:
-    name: Build Docker Image
+  build-and-push-ecr-image:
+    name: Continuous Delivery
     needs: integration
     runs-on: ubuntu-latest
     steps:
@@ -37,35 +37,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y jq unzip
-
-      - name: Build Docker image
-        id: build-image
-        run: |
-          # Two-stage Docker build to reduce final image size
-          docker build --target final -t my-image:latest .
-      
-      - name: Save Docker image to tar
-        run: |
-          docker save my-image:latest -o my-image.tar
-
-      - name: Remove Docker images and containers to free space
-        run: |
-          docker image prune -af
-          docker container prune -f
-          docker system prune -af --volumes
-
-  push-docker-image:
-    name: Push Docker Image to ECR
-    needs: build-docker-image
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Install AWS CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y awscli
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -78,23 +49,29 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Load and push Docker image to ECR
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
+          IMAGE_TAG: latest
         run: |
-          docker load -i my-image.tar
-          ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY=${{ secrets.ECR_REPOSITORY_NAME }}
-          IMAGE_TAG=latest
-          docker tag my-image:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          # Build a docker container and push it to ECR
+          docker build --no-cache -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-      - name: Clean up Docker system
+      - name: Remove unused Docker images and containers
         run: |
           docker image prune -af
           docker container prune -f
+
+      - name: Clean up Docker system
+        run: |
           docker system prune -af --volumes
 
   Continuous-Deployment:
-    needs: push-docker-image
+    needs: build-and-push-ecr-image
     runs-on: self-hosted
     steps:
       - name: Checkout
