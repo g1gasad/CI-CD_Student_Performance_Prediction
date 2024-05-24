@@ -3,7 +3,7 @@ numpy
 seaborn
 matplotlib
 scikit-learn
-# catboost
+# catboost : This was causing a problem in GitHub Actions
 xgboost
 dill
 Flask
