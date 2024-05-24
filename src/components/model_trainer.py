@@ -2,7 +2,7 @@ import os
 import sys 
 from dataclasses import dataclass
 
-from catboost import CatBoostRegressor
+# from catboost import CatBoostRegressor
 from sklearn.ensemble import (
     AdaBoostRegressor,
     GradientBoostingRegressor,
@@ -10,7 +10,7 @@ from sklearn.ensemble import (
     )
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.neighbors import KNeighborsRegressor
+# from sklearn.neighbors import KNeighborsRegressor
 from xgboost import XGBRegressor
 from sklearn.metrics import r2_score
 
@@ -42,7 +42,7 @@ class ModelTrainer:
                 'RandomForest Regressor': RandomForestRegressor(),
                 'GradientBoosting Regressor': GradientBoostingRegressor(),
                 'XGB Regressor': XGBRegressor(max_depth=5),
-                'CatBoosting Regressor': CatBoostRegressor(verbose=False),
+                # 'CatBoosting Regressor': CatBoostRegressor(verbose=False),
                 'AdaBoosting Regressor': AdaBoostRegressor()
             }
             params = {
@@ -69,11 +69,11 @@ class ModelTrainer:
                     'learning_rate':[.1,.01,.05,.001],
                     'n_estimators': [8,16,32,64,128,256]
                 },
-                "CatBoosting Regressor":{
-                    'depth': [6,8,10],
-                    'learning_rate': [0.01, 0.05, 0.1],
-                    'iterations': [30, 50, 100]
-                },
+                # "CatBoosting Regressor":{
+                #     'depth': [6,8,10],
+                #     'learning_rate': [0.01, 0.05, 0.1],
+                #     'iterations': [30, 50, 100]
+                # },
                 "AdaBoosting Regressor":{
                     'learning_rate':[.1,.01,0.5,.001],
                     # 'loss':['linear','square','exponential'],
