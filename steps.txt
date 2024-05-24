@@ -2,13 +2,16 @@
 2. GitHub Workflow
 3. IAM User in AWS
 
+4.ECR - URI
+099161041881.dkr.ecr.ap-south-1.amazonaws.com/student-performance-prediction
+
 ** Docker setup in EC2
      # optional
             sudo apt-get update -y
-            sudo apt-get upgrade
+            sudo apt-get upgrade -y
 
      # required	
-	curl -fsSL https://get.docker.com -o get docker.sh
+	curl -fsSL https://get.docker.com -o get-docker.sh
 	sudo sh get-docker.sh
 	sudo usermod -aG docker ubuntu
 	newgrp docker
