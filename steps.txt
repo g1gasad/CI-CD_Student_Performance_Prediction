@@ -15,6 +15,11 @@
 	sudo sh get-docker.sh
 	sudo usermod -aG docker ubuntu
 	newgrp docker
+     ## enter docker to check if "docker" is running or not
+
+** From here, move on to the Runners on GitHub Actions
+** Copy and Paste to the aws cli and give the name of the runner as "self-hosted"
+
 ## Configure EC2 as self-hosted runner:
 
 ## Setup GitHub secrets:
